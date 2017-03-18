@@ -24,7 +24,7 @@ class ViewController: NSViewController {
 		textField!.drawsBackground = false
 		textField!.isEditable = false
 		textField!.isSelectable = false
-		textField!.stringValue = "You need a TouchBar"
+		textField!.stringValue = "You need a Touch Bar"
 		textField!.textColor = NSColor.yellow
 		self.view.addSubview(textField!)
 		// Do any additional setup after loading the view.
