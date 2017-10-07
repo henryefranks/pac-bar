@@ -29,12 +29,14 @@ protocol DetailsDelegate: class {
 	func updateLabel(Score: Int)
 }
 
-fileprivate extension NSTouchBarCustomizationIdentifier {
-	static let customTouchBar = NSTouchBarCustomizationIdentifier("com.HenryFranks.touchbar.customTouchBar")
+@available(OSX 10.12.2, *)
+fileprivate extension NSTouchBar.CustomizationIdentifier {
+	static let customizationIdentifier = NSTouchBar.CustomizationIdentifier("com.HenryFranks.touchbar.customizationIdentifier")
 }
 
-fileprivate extension NSTouchBarItemIdentifier {
-	static let customView = NSTouchBarItemIdentifier("com.HenryFranks.touchbar.items.customView")
+@available(OSX 10.12.2, *)
+fileprivate extension NSTouchBarItem.Identifier {
+	static let identifier = NSTouchBarItem.Identifier("com.HenryFranks.touchbar.items.identifier")
 }
 
 class WindowController: NSWindowController {
@@ -47,9 +49,9 @@ class WindowController: NSWindowController {
 	override func makeTouchBar() -> NSTouchBar? {
 		let touchBar = NSTouchBar()
 		touchBar.delegate = self
-		touchBar.customizationIdentifier = .customTouchBar
-		touchBar.defaultItemIdentifiers = [.customView]
-		touchBar.customizationAllowedItemIdentifiers = [.customView]
+		touchBar.customizationIdentifier = .customizationIdentifier
+		touchBar.defaultItemIdentifiers = [.identifier]
+		touchBar.customizationAllowedItemIdentifiers = [.identifier]
 		return touchBar
 	}
 
@@ -95,10 +97,10 @@ class WindowController: NSWindowController {
 @available(OSX 10.12.2, *)
 extension WindowController: NSTouchBarDelegate {
 
-	func touchBar(_ touchBar: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItemIdentifier) -> NSTouchBarItem? {
+	func touchBar(_ touchBar: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
 
 		switch identifier {
-		case NSTouchBarItemIdentifier.customView:
+		case NSTouchBarItem.Identifier.identifier:
 			let gameView = SKView()
 			let scene = GameScene()
 			let item = NSCustomTouchBarItem(identifier: identifier)
@@ -280,6 +282,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 	//Miscellaneous
 	func GameOver(blinky: SKSpriteNode) {
+		if score > highScore {
+			highScore = score
+		}
 		self.view?.scene?.isPaused = true
 		sirenAudio.stop()
 		blinky.removeFromParent()
@@ -347,6 +352,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 	func updateScore(value: String) {
 		textField?.stringValue = value
+		highField?.stringValue = "TOP: \(highScore)"
 	}
 
 	func bSpeedInc() {
@@ -416,13 +422,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			if up {
 				PacMan.position.x = 214
 				PacMan.xScale = 1
-				PacMan.zRotation = CGFloat(0.5 * M_PI)
+				PacMan.zRotation = CGFloat(0.5 * Double.pi)
 				horizontalMove = false
 				PacMan.position.y += 1
 			} else if down {
 				PacMan.xScale = 1
 				PacMan.position.x = 214
-				PacMan.zRotation = CGFloat(1.5 * M_PI)
+				PacMan.zRotation = CGFloat(1.5 * Double.pi)
 				horizontalMove = false
 				PacMan.position.y -= 1
 			}
@@ -430,13 +436,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			if up {
 				PacMan.xScale = 1
 				PacMan.position.x = 642
-				PacMan.zRotation = CGFloat(0.5 * M_PI)
+				PacMan.zRotation = CGFloat(0.5 * Double.pi)
 				horizontalMove = false
 				PacMan.position.y += 1
 			} else if down {
 				PacMan.xScale = 1
 				PacMan.position.x = 642
-				PacMan.zRotation = CGFloat(1.5 * M_PI)
+				PacMan.zRotation = CGFloat(1.5 * Double.pi)
 				horizontalMove = false
 				PacMan.position.y -= 1
 			}
