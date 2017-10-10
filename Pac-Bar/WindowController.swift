@@ -43,6 +43,10 @@ class WindowController: NSWindowController {
 
 	override func windowDidLoad() {
 		super.windowDidLoad()
+		self.window?.title = "Pac-Bar"
+		self.window?.titleVisibility = .hidden
+		self.window?.titlebarAppearsTransparent = true
+		self.window?.styleMask.insert(NSWindow.StyleMask.fullSizeContentView)
 	}
 
 	@available(OSX 10.12.2, *)
