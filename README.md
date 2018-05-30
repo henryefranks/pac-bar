@@ -2,7 +2,7 @@
 ### Pac-Man for the MacBook Pro Touch Bar
 ##### A Touch Bar is required to play
 
-###### Download the zip ![here](https://github.com/henryefranks/Pac-Bar/releases/latest).
+###### Download the zip [here](https://github.com/henryefranks/Pac-Bar/releases/latest).
 
 ![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Dot](/resources/Dot.png)![Pac-Man](/resources/PacMan.png)
 
