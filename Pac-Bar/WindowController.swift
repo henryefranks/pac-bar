@@ -22,7 +22,7 @@ var counter: Int = 15 //To acount for awkwardness in controls
 struct gamePhysics {
 	static let PacMan: UInt32 = 1
 	static let Dot: UInt32 = 2
-	static let Blinky: UInt32 = 3
+	static let Blinky: UInt32 = 4
 }
 
 protocol DetailsDelegate: class {
