@@ -8,20 +8,6 @@
 
 import Cocoa
 
-public var textField: NSTextField!
-public var highField: NSTextField!
-
-var highScore: Int {
-	set {
-		UserDefaults.standard.set(newValue, forKey: "highScore")
-		UserDefaults.standard.synchronize()
-	}
-
-	get {
-		return UserDefaults.standard.object(forKey: "highScore") as? Int ?? 0
-	}
-}
-
 class ViewController: NSViewController {
 
 	override func viewDidLoad() {
