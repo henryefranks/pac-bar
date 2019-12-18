@@ -31,7 +31,7 @@ protocol DetailsDelegate: class {
 
 @available(OSX 10.12.2, *)
 fileprivate extension NSTouchBar.CustomizationIdentifier {
-	static let customizationIdentifier = NSTouchBar.CustomizationIdentifier("com.HenryFranks.touchbar.customizationIdentifier")
+	static let customizationIdentifier = "com.HenryFranks.touchbar.customizationIdentifier"
 }
 
 @available(OSX 10.12.2, *)
