@@ -29,3 +29,12 @@ Voila! You can now enjoy Pac-bar.
 
 ## Contributing
 Pac-Bar will always be free and open-source, so anyone can contribute! If you find a bug please [report an issue](//github.com/henryefranks/pac-bar/issues), and I'll try and fix it as soon as I can. Or if you implement a feature, feel free to create a [pull request](//github.com/henryefranks/pac-bar/pulls).
+
+<br />
+<br />
+
+---
+
+<p align="center">
+<h3 align="center">Coming Soon: <a href="//github.com/henryefranks/pac-bar-dx">Pac-Bar DX</a>, a fully-featured successor to Pac-Bar</h3>
+</p>
