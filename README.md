@@ -21,7 +21,7 @@ The aim of the game is to eat all the dots scattered throughout the maze, but be
 ## Installation
 Getting set up with Pac-Bar is as easy as 1, 2, 3:
 
-1. ### Download the game [here](//github.com/henryefranks/pac-bar/releases/latest).
+1. ### Download the game [here](//github.com/henryefranks/pac-bar/releases/latest)
 2. Unzip the file and move Pac-Bar.app to your Applications folder
 3. The game is now installed! Run it from your Launchpad or your Applications folder
 
