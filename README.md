@@ -15,7 +15,7 @@ The aim of the game is to eat all the dots scattered throughout the maze, but be
 	<br />
 	<img src="Resources/Tunnels.png">
 	<br />
-	<span align="center">The warp tunnels teleport you to the other side of the maze</span>
+	<span align="center">Warp tunnels teleport you to the other side of the maze</span>
 </p>
 
 ## Installation
