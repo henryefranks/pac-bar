@@ -24,6 +24,10 @@ struct gamePhysics {
 	static let Blinky: UInt32 = 4
 }
 
+enum GameState {
+	case intro, playing
+}
+
 protocol DetailsDelegate: class {
 	func updateLabel(Score: Int)
 }

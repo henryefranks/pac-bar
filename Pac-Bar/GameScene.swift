@@ -9,11 +9,14 @@
 import Cocoa
 import SpriteKit
 import GameplayKit
-import AVFoundation
+
+// TODO: Convert to classes
+// TODO: GameState enum
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
 	//Variables
+	var state: GameState = .intro
 	var score: Int = 0
 	var borderArray = [SKSpriteNode]()
 	var numDots = 85
@@ -32,19 +35,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	var tHold2: Bool = false //These keep Blinky's speed from being increased more than once
 	var dotNumber: Bool = true //true = 1, false = 2
 
-	//Sounds
-	let eat1 = NSURL(fileURLWithPath: Bundle.main.path(forResource: "munch A", ofType: "wav")!)
-	let eat2 = NSURL(fileURLWithPath: Bundle.main.path(forResource: "munch B", ofType: "wav")!)
-	let sirenF = NSURL(fileURLWithPath: Bundle.main.path(forResource: "siren fast", ofType: "wav")!)
-	let sirenM = NSURL(fileURLWithPath: Bundle.main.path(forResource: "siren medium", ofType: "wav")!)
-	let sirenS = NSURL(fileURLWithPath: Bundle.main.path(forResource: "siren slow", ofType: "wav")!)
-	let death = NSURL(fileURLWithPath: Bundle.main.path(forResource: "death", ofType: "wav")!)
-	let intro = NSURL(fileURLWithPath: Bundle.main.path(forResource: "intro", ofType: "wav")!)
-
-	//Audio players
-	var eatAudio = AVAudioPlayer()
-	var sirenAudio = AVAudioPlayer()
-	var miscAudio = AVAudioPlayer() //for the intro and death sound effects
+	// Sounds
+	let munchA = SKAction.playSoundFileNamed("munch A.wav", waitForCompletion: false)
+	let munchB = SKAction.playSoundFileNamed("munch B.wav", waitForCompletion: false)
+	let gameOverSound = SKAction.playSoundFileNamed("death.wav", waitForCompletion: false)
+	let introSound = SKAction.playSoundFileNamed("intro.wav", waitForCompletion: false)
+	let slowSiren = SKAction.playSoundFileNamed("siren slow.wav", waitForCompletion: true)
+	let mediumSiren = SKAction.playSoundFileNamed("siren medium.wav", waitForCompletion: true)
+	let fastSiren = SKAction.playSoundFileNamed("siren fast.wav", waitForCompletion: true)
 
 	//Creating stuff
 	func createDots() {
@@ -145,20 +143,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		numDots -= 1
 		updateScore(value: String(describing: score))
 		if dotNumber {
-			do {
-				try eatAudio = AVAudioPlayer(contentsOf: eat1 as URL)
-			} catch{
-				print("Could not update audio - eat1")
-			}
+			PacMan.run(munchA)
 		} else {
-			do {
-				try eatAudio = AVAudioPlayer(contentsOf: eat2 as URL)
-			} catch{
-				print("Could not update audio - eat2")
-			}
+			PacMan.run(munchB)
 		}
-		eatAudio.prepareToPlay()
-		eatAudio.play()
 		dotNumber = !dotNumber
 	}
 
@@ -181,8 +169,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		if score > highScore {
 			highScore = score
 		}
+
 		self.view?.scene?.isPaused = true
-		sirenAudio.stop()
+		for action in ["slowSiren", "mediumSiren", "fastSiren"] {
+			self.removeAction(forKey: action)
+		}
+
 		blinky.removeFromParent()
 		self.removeDots()
 		DeathFrames()
@@ -274,13 +266,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		self.addChild(PacManD)
 		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
 			self.view?.scene?.isPaused = false
-			do {
-				try self.miscAudio = AVAudioPlayer(contentsOf: self.death as URL)
-			} catch{
-				print("Could not update audio - death")
-			}
-			self.miscAudio.prepareToPlay()
-			self.miscAudio.play()
+			PacManD.run(self.gameOverSound)
+
 			for i in 1...11 {
 				if i == 1 {
 					PacManD.position.y -= 1 //to account for differences in sprite dimensions
@@ -304,12 +291,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		} else if (firstBody.categoryBitMask == gamePhysics.Blinky) && (secondBody.categoryBitMask == gamePhysics.PacMan) {
 			GameOver(blinky: firstBody.node as! SKSpriteNode)
 		}
-	}
-
-	func playSiren() {
-		sirenAudio.numberOfLoops = -1
-		sirenAudio.prepareToPlay()
-		sirenAudio.play()
 	}
 
 	//Movement
@@ -437,16 +418,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	//Initialise the game
 	override func didMove(to view: SKView) {
 		super.didMove(to: view)
-		self.view?.scene?.isPaused = true
+
+		self.run(introSound)
+
 		updateScore(value: "READY!")
+
 		physicsWorld.contactDelegate = self
-		do {
-			eatAudio = try AVAudioPlayer(contentsOf: eat1 as URL)
-			sirenAudio = try AVAudioPlayer(contentsOf: sirenS as URL)
-			miscAudio = try AVAudioPlayer(contentsOf: intro as URL)
-		} catch {
-			print("Could not update audio - eat1, sirenS, intro")
-		}
+
 		createBorders()
 		self.scaleMode = .resizeFill
 		self.backgroundColor = .black
@@ -477,8 +455,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		BlinkyFrames = ghostFrames
 		BlinkyUpFrames = ghostUpFrames
 		BlinkyDownFrames = ghostDownFrames
-		miscAudio.prepareToPlay()
-		miscAudio.play()
+
 		createSprite(texture: BlinkyFrames, height: 14, width: 14, xPos: 50, yPos: 15, node: &Blinky, catBitMask: gamePhysics.Blinky, conTestBitMask: [gamePhysics.PacMan, gamePhysics.Dot])
 		PacFrames = eatFrames
 		createSprite(texture: PacFrames, height: 13, width: 13, xPos: 300, yPos: 15, node: &PacMan, catBitMask: gamePhysics.PacMan, conTestBitMask: [gamePhysics.Dot, gamePhysics.Blinky])
@@ -489,184 +466,190 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			self.Blinky.zPosition = 5
 			self.PacMan.run(SKAction.repeatForever(SKAction.animate(with: self.PacFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "PacManEat")
 			self.Blinky.run(SKAction.repeatForever(SKAction.animate(with: self.BlinkyFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "BlinkyMove")
-			self.view?.scene?.isPaused = false
-			self.playSiren()
+			self.state = .playing
+			self.run(SKAction.repeatForever(self.slowSiren), withKey: "slowSiren")
 		}
 	}
 
 	//Update everything (calls other functions)
 	override func update(_ currentTime: TimeInterval) {
-		let bXPos = Blinky.position.x
-		let bYPos = Blinky.position.y
-		_ = PacMan.position.x
-		checkOverflow(sprite: PacMan)
-		checkOverflow(sprite: Blinky)
-		if numDots == 10 {
-			if !tHold2 {
-				bSpeedInc()
-				do {
-					sirenAudio = try AVAudioPlayer(contentsOf: sirenF as URL)
-				} catch {
-					print("Could not update audio - sirenF")
+		if self.state == .playing {
+			let bXPos = Blinky.position.x
+			let bYPos = Blinky.position.y
+
+			checkOverflow(sprite: PacMan)
+			checkOverflow(sprite: Blinky)
+
+			if numDots == 10 {
+				if !tHold2 {
+					bSpeedInc()
+
+					self.removeAction(forKey: "mediumSiren")
+					self.run(SKAction.repeatForever(fastSiren), withKey: "fastSiren")
 				}
-				playSiren()
+
+				tHold2 = true
+			} else if numDots == 30 {
+				if !tHold1 {
+					bSpeedInc()
+
+					self.removeAction(forKey: "slowSiren")
+					self.run(SKAction.repeatForever(mediumSiren), withKey: "mediumSiren")
+				}
+
+				tHold1 = true
 			}
-			tHold2 = true
-		} else if numDots == 30 {
-			if !tHold1 {
-				bSpeedInc()
-				do {
-					sirenAudio = try AVAudioPlayer(contentsOf: sirenM as URL)
-				} catch {
-					print("Could not update audio - sirenM")
+
+			if let array = findNearestPath() {
+				if findShortestPath(array: array) == 1 || findShortestPath(array: array) == 3 {
+					bHorizontalMove = true
+					if Blinky.action(forKey: "BlinkyMoveUp") != nil {
+						Blinky.removeAction(forKey: "BlinkyMoveUp")
+					}
+					if Blinky.action(forKey: "BlinkyMoveDown") != nil {
+						Blinky.removeAction(forKey: "BlinkyMoveDown")
+					}
+					if Blinky.action(forKey: "BlinkyMoveDown") == nil {
+						Blinky.run(SKAction.repeatForever(SKAction.animate(with: BlinkyFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "BlinkyMove")
+					}
+					Blinky.position.y = 15
 				}
-				playSiren()
-			}
-			tHold1 = true
-		}
-		if let array = findNearestPath() {
-			if findShortestPath(array: array) == 1 || findShortestPath(array: array) == 3 {
-				bHorizontalMove = true
-				if Blinky.action(forKey: "BlinkyMoveUp") != nil {
-					Blinky.removeAction(forKey: "BlinkyMoveUp")
-				}
-				if Blinky.action(forKey: "BlinkyMoveDown") != nil {
-					Blinky.removeAction(forKey: "BlinkyMoveDown")
-				}
-				if Blinky.action(forKey: "BlinkyMoveDown") == nil {
-					Blinky.run(SKAction.repeatForever(SKAction.animate(with: BlinkyFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "BlinkyMove")
-				}
-				Blinky.position.y = 15
-			}
-			switch findShortestPath(array: array) {
-			case 0:
-				if Blinky.action(forKey: "BlinkyMove") != nil {
-					Blinky.removeAction(forKey: "BlinkyMove")
-				}
-				if Blinky.action(forKey: "BlinkyMoveDown") != nil {
-					Blinky.removeAction(forKey: "BlinkyMoveDown")
-				}
-				if Blinky.action(forKey: "BlinkyMoveUp") == nil {
-					Blinky.run(SKAction.repeatForever(SKAction.animate(with: BlinkyUpFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "BlinkyMoveUp")
-				}
-				if Blinky.position.x < 214.5 && Blinky.position.x > 213.5 {
-					Blinky.position.x = 214
-				} else {
-					Blinky.position.x = 642
-				}
-				bHorizontalMove = false
-				bVerticalMove = true
-				Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
-			case 1:
-				bHorizontalMove = true
-				Blinky.position.y = 15
-				Blinky.position.x -= bSpeed(xPos: bXPos, yPos: bYPos)
-				Blinky.xScale = -1
-			case 2:
-				if Blinky.action(forKey: "BlinkyMove") != nil {
-					Blinky.removeAction(forKey: "BlinkyMove")
-				}
-				if Blinky.action(forKey: "BlinkyMoveUp") != nil {
-					Blinky.removeAction(forKey: "BlinkyMoveUp")
-				}
-				if Blinky.action(forKey: "BlinkyMoveDown") == nil {
-					Blinky.run(SKAction.repeatForever(SKAction.animate(with: BlinkyDownFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "BlinkyMoveDown")
-				}
-				if Blinky.position.x < 214.5 && Blinky.position.x > 213.5 {
-					Blinky.position.x = 214
-				} else {
-					Blinky.position.x = 642
-				}
-				bHorizontalMove = false
-				bVerticalMove = false
-				Blinky.position.y -= bSpeed(xPos: bXPos, yPos: bYPos)
-			case 3:
-				bHorizontalMove = true
-				Blinky.position.y = 15
-				Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
-				Blinky.xScale = 1
-			default:
-				break
-			}
-		} else {
-			if bHorizontalMove {
-				if Blinky.xScale > 0 {
-					Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
-					Blinky.xScale = 1
-				} else {
+				switch findShortestPath(array: array) {
+				case 0:
+					if Blinky.action(forKey: "BlinkyMove") != nil {
+						Blinky.removeAction(forKey: "BlinkyMove")
+					}
+					if Blinky.action(forKey: "BlinkyMoveDown") != nil {
+						Blinky.removeAction(forKey: "BlinkyMoveDown")
+					}
+					if Blinky.action(forKey: "BlinkyMoveUp") == nil {
+						Blinky.run(SKAction.repeatForever(SKAction.animate(with: BlinkyUpFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "BlinkyMoveUp")
+					}
+					if Blinky.position.x < 214.5 && Blinky.position.x > 213.5 {
+						Blinky.position.x = 214
+					} else {
+						Blinky.position.x = 642
+					}
+					bHorizontalMove = false
+					bVerticalMove = true
+					Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
+				case 1:
+					bHorizontalMove = true
+					Blinky.position.y = 15
 					Blinky.position.x -= bSpeed(xPos: bXPos, yPos: bYPos)
 					Blinky.xScale = -1
-				}
-			} else {
-				if bVerticalMove {
-					Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
-				} else {
+				case 2:
+					if Blinky.action(forKey: "BlinkyMove") != nil {
+						Blinky.removeAction(forKey: "BlinkyMove")
+					}
+					if Blinky.action(forKey: "BlinkyMoveUp") != nil {
+						Blinky.removeAction(forKey: "BlinkyMoveUp")
+					}
+					if Blinky.action(forKey: "BlinkyMoveDown") == nil {
+						Blinky.run(SKAction.repeatForever(SKAction.animate(with: BlinkyDownFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "BlinkyMoveDown")
+					}
+					if Blinky.position.x < 214.5 && Blinky.position.x > 213.5 {
+						Blinky.position.x = 214
+					} else {
+						Blinky.position.x = 642
+					}
+					bHorizontalMove = false
+					bVerticalMove = false
 					Blinky.position.y -= bSpeed(xPos: bXPos, yPos: bYPos)
+				case 3:
+					bHorizontalMove = true
+					Blinky.position.y = 15
+					Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
+					Blinky.xScale = 1
+				default:
+					break
 				}
-			}
-		}
-		if horizontalMove {
-			horizontalWait = false
-			if direction {
-				if PacMan.xScale < 0 {
-					PacMan.xScale = PacMan.xScale * -1;
-				}
-				PacMan.position.x += 1
 			} else {
-				if PacMan.xScale > 0 {
-					PacMan.xScale = PacMan.xScale * -1;
+				if bHorizontalMove {
+					if Blinky.xScale > 0 {
+						Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
+						Blinky.xScale = 1
+					} else {
+						Blinky.position.x -= bSpeed(xPos: bXPos, yPos: bYPos)
+						Blinky.xScale = -1
+					}
+				} else {
+					if bVerticalMove {
+						Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
+					} else {
+						Blinky.position.y -= bSpeed(xPos: bXPos, yPos: bYPos)
+					}
 				}
-				PacMan.position.x -= 1
 			}
-		}
-		checkVertical()
-		checkHorizontal()
-		if counter > 0 {
-			counter -= 1
-		} else {
-			horizontalWait = false
-			if !(PacMan.position.x < 214.5 && PacMan.position.x > 213.5) && !(PacMan.position.x < 642.5 && PacMan.position.x > 641.5) {
-				up = false
-				down = false
-			}
-		}
-		checkOverflow(sprite: Blinky)
-		if numDots < 1 {
-			self.view?.scene?.isPaused = true
-			sirenAudio.stop()
-			PacMan.texture = SKTexture(imageNamed: "Pacman3")
-			DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
-				self.Blinky.removeFromParent()
-				for i in 1...8 {
-					self.flashAfterDelay(delay: Double(i) * 0.2)
+			if horizontalMove {
+				horizontalWait = false
+
+				if direction {
+					if PacMan.xScale < 0 {
+						PacMan.xScale = PacMan.xScale * -1;
+					}
+					PacMan.position.x += 1
+				} else {
+					if PacMan.xScale > 0 {
+						PacMan.xScale = PacMan.xScale * -1;
+					}
+					PacMan.position.x -= 1
 				}
-				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0) {
+			}
+			checkVertical()
+			checkHorizontal()
+			if counter > 0 {
+				counter -= 1
+			} else {
+				horizontalWait = false
+				if !(PacMan.position.x < 214.5 && PacMan.position.x > 213.5) && !(PacMan.position.x < 642.5 && PacMan.position.x > 641.5) {
+					up = false
+					down = false
+				}
+			}
+			checkOverflow(sprite: Blinky)
+			if numDots < 1 {
+				self.view?.scene?.isPaused = true
+
+				for action in ["slowSiren", "mediumSiren", "fastSiren"] {
+					self.removeAction(forKey: action)
+				}
+
+				PacMan.texture = SKTexture(imageNamed: "Pacman3")
+
+				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
+					self.Blinky.removeFromParent()
+
+					for i in 1...8 {
+						self.flashAfterDelay(delay: Double(i) * 0.2)
+					}
+				}
+
+				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.3) {
 					self.PacMan.removeFromParent()
 					self.hideBars()
-					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
-						self.addChild(self.PacMan)
-						self.createBorders()
-						self.addChild(self.Blinky)
-						self.Blinky.position.x = 50
-						self.Blinky.position.y = 15
-						self.PacMan.position.x = 300
-						self.PacMan.position.y = 15
-						DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
-							direction = true
-							self.Blinky.xScale = 1
-							self.numDots = 85
-							self.createDots()
-							self.tHold1 = false
-							self.tHold2 = false
-							self.view?.scene?.isPaused = false
-							do {
-								self.sirenAudio = try AVAudioPlayer(contentsOf: self.sirenS as URL)
-							} catch {
-								print("Could not update audio - sirenS")
-							}
-							self.playSiren()
-						}
-					}
+				}
+
+				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.4) {
+					self.addChild(self.PacMan)
+					self.createBorders()
+					self.addChild(self.Blinky)
+					self.Blinky.position.x = 50
+					self.Blinky.position.y = 15
+					self.PacMan.position.x = 300
+					self.PacMan.position.y = 15
+				}
+
+				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.6) {
+					direction = true
+					self.Blinky.xScale = 1
+					self.numDots = 85
+					self.createDots()
+					self.tHold1 = false
+					self.tHold2 = false
+					self.view?.scene?.isPaused = false
+
+					self.run(SKAction.repeatForever(self.slowSiren), withKey: "slowSiren")
 				}
 			}
 		}
