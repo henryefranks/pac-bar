@@ -72,6 +72,9 @@ class WindowController: NSWindowController {
 			up = true
 			down = false
 			counter = 15
+        case 0x0F:
+            //r
+            gameRestart = true
 		default:
 			break
 		}
