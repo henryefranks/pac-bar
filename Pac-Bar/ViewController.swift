@@ -29,7 +29,7 @@ class ViewController: NSViewController {
 		self.view.layer?.backgroundColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1.0)
 
 		// Warning/Score text field
-		textField = self.createTextField(origin: CGPoint(x: 0, y: 70), size: CGSize(width: self.view.frame.width, height: 80), fontSize: 30, stringValue: "You need a Touch Bar")
+		textField = self.createTextField(origin: CGPoint(x: 0, y: 70), size: CGSize(width: self.view.frame.width, height: 120), fontSize: 30, stringValue: "You need a Touch Bar")
 
 		// High score text field
 		highField = self.createTextField(origin: CGPoint(x: 0, y: 10), size: CGSize(width: self.view.frame.width, height: 50), fontSize: 25, stringValue: "")
