@@ -12,6 +12,7 @@ public var textField: NSTextField!
 public var highField: NSTextField!
 
 var direction: Bool = true //true=right, false=left
+var gameRestart: Bool = false //trigger to wait until corner reached
 var up: Bool = false //trigger to wait until corner reached
 var down: Bool = false //ditto
 var horizontalWait: Bool = false
