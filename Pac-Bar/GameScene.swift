@@ -292,37 +292,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			GameOver(blinky: firstBody.node as! SKSpriteNode)
 		}
 	}
+    
+    func handleVertical(xpos: CGFloat) {
+        if up {
+            PacMan.position.x = xpos
+            PacMan.xScale = 1
+            PacMan.zRotation = CGFloat(0.5 * Double.pi)
+            horizontalMove = false
+            PacMan.position.y += 1
+        } else if down {
+            PacMan.xScale = 1
+            PacMan.position.x = xpos
+            PacMan.zRotation = CGFloat(1.5 * Double.pi)
+            horizontalMove = false
+            PacMan.position.y -= 1
+        }
+    }
 
 	//Movement
 	func checkVertical() {
 		if PacMan.position.x < 214.5 && PacMan.position.x > 213.5 { //to account for decimals
-			if up {
-				PacMan.position.x = 214
-				PacMan.xScale = 1
-				PacMan.zRotation = CGFloat(0.5 * Double.pi)
-				horizontalMove = false
-				PacMan.position.y += 1
-			} else if down {
-				PacMan.xScale = 1
-				PacMan.position.x = 214
-				PacMan.zRotation = CGFloat(1.5 * Double.pi)
-				horizontalMove = false
-				PacMan.position.y -= 1
-			}
+            handleVertical(xpos: 214)
 		} else if PacMan.position.x < 642.5 && PacMan.position.x > 641.5 {
-			if up {
-				PacMan.xScale = 1
-				PacMan.position.x = 642
-				PacMan.zRotation = CGFloat(0.5 * Double.pi)
-				horizontalMove = false
-				PacMan.position.y += 1
-			} else if down {
-				PacMan.xScale = 1
-				PacMan.position.x = 642
-				PacMan.zRotation = CGFloat(1.5 * Double.pi)
-				horizontalMove = false
-				PacMan.position.y -= 1
-			}
+            handleVertical(xpos: 642)
 		}
 	}
 
@@ -470,6 +462,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			self.run(SKAction.repeatForever(self.slowSiren), withKey: "slowSiren")
 		}
 	}
+    
+    func blinkyMove(horizontal: Bool, vertical: Bool, bXPos: CGFloat, bYPos: CGFloat) {
+        if horizontal {
+            if Blinky.xScale > 0 {
+                Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
+                Blinky.xScale = 1
+            } else {
+                Blinky.position.x -= bSpeed(xPos: bXPos, yPos: bYPos)
+                Blinky.xScale = -1
+            }
+        } else {
+            if vertical {
+                Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
+            } else {
+                Blinky.position.y -= bSpeed(xPos: bXPos, yPos: bYPos)
+            }
+        }
+    }
 
 	//Update everything (calls other functions)
 	override func update(_ currentTime: TimeInterval) {
@@ -565,21 +575,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 					break
 				}
 			} else {
-				if bHorizontalMove {
-					if Blinky.xScale > 0 {
-						Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
-						Blinky.xScale = 1
-					} else {
-						Blinky.position.x -= bSpeed(xPos: bXPos, yPos: bYPos)
-						Blinky.xScale = -1
-					}
-				} else {
-					if bVerticalMove {
-						Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
-					} else {
-						Blinky.position.y -= bSpeed(xPos: bXPos, yPos: bYPos)
-					}
-				}
+                blinkyMove(horizontal: bHorizontalMove, vertical: bVerticalMove, bXPos: bXPos, bYPos: bYPos)
 			}
 			if horizontalMove {
 				horizontalWait = false
