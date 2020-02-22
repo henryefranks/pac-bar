@@ -462,24 +462,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			self.run(SKAction.repeatForever(self.slowSiren), withKey: "slowSiren")
 		}
 	}
-    
-    func blinkyMove(horizontal: Bool, vertical: Bool, bXPos: CGFloat, bYPos: CGFloat) {
-        if horizontal {
-            if Blinky.xScale > 0 {
-                Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
-                Blinky.xScale = 1
-            } else {
-                Blinky.position.x -= bSpeed(xPos: bXPos, yPos: bYPos)
-                Blinky.xScale = -1
-            }
-        } else {
-            if vertical {
-                Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
-            } else {
-                Blinky.position.y -= bSpeed(xPos: bXPos, yPos: bYPos)
-            }
-        }
-    }
 
 	//Update everything (calls other functions)
 	override func update(_ currentTime: TimeInterval) {
@@ -575,7 +557,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 					break
 				}
 			} else {
-                blinkyMove(horizontal: bHorizontalMove, vertical: bVerticalMove, bXPos: bXPos, bYPos: bYPos)
+				if bHorizontalMove {
+					if Blinky.xScale > 0 {
+						Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
+						Blinky.xScale = 1
+					} else {
+						Blinky.position.x -= bSpeed(xPos: bXPos, yPos: bYPos)
+						Blinky.xScale = -1
+					}
+				} else {
+					if bVerticalMove {
+						Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
+					} else {
+						Blinky.position.y -= bSpeed(xPos: bXPos, yPos: bYPos)
+					}
+				}
 			}
 			if horizontalMove {
 				horizontalWait = false
