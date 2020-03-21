@@ -10,15 +10,14 @@ import Cocoa
 import SpriteKit
 import GameplayKit
 
+// FIXME: Memory Leaks
 // TODO: Convert to classes
-// TODO: GameState enum
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
 	//Variables
 	var state: GameState = .intro
 	var score: Int = 0
-	var borderArray = [SKSpriteNode]()
 	var numDots = 85
 	var PacMan: SKSpriteNode!
 	var PacFrames: [SKTexture]!
@@ -251,16 +250,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		var PacManD: SKSpriteNode!
 		let DeathAtlas = SKTextureAtlas(named: "PacmanD")
 		var deathFrames = [SKTexture]()
+
 		for index in 1...11 {
 			let textureName = "PacManD\(index)"
 			deathFrames.append(DeathAtlas.textureNamed(textureName))
 		}
+
 		PacManD = SKSpriteNode(texture: deathFrames[0])
 		PacManD.position.x = self.PacMan.position.x
 		PacManD.position.y = self.PacMan.position.y - 2
+
 		Blinky.removeFromParent()
 		PacMan.removeAction(forKey: "PacManEat")
 		PacMan.texture = SKTexture(imageNamed: "Pacman3")
+
 		updateScore(value: String(describing: score) + "\n GAME OVER")
 		self.PacMan.removeFromParent()
 		self.addChild(PacManD)
@@ -458,14 +461,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 		createSprite(texture: BlinkyFrames, height: 14, width: 14, xPos: 50, yPos: 15, node: &Blinky, catBitMask: gamePhysics.Blinky, conTestBitMask: [gamePhysics.PacMan, gamePhysics.Dot])
 		PacFrames = eatFrames
+
 		createSprite(texture: PacFrames, height: 13, width: 13, xPos: 300, yPos: 15, node: &PacMan, catBitMask: gamePhysics.PacMan, conTestBitMask: [gamePhysics.Dot, gamePhysics.Blinky])
+
 		PacMan.texture = PacFrames[2]
 		Blinky.physicsBody?.collisionBitMask = 0
+
 		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 4.5) {
 			self.createDots()
 			self.Blinky.zPosition = 5
+
 			self.PacMan.run(SKAction.repeatForever(SKAction.animate(with: self.PacFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "PacManEat")
 			self.Blinky.run(SKAction.repeatForever(SKAction.animate(with: self.BlinkyFrames, timePerFrame: 0.05, resize: false, restore: true)), withKey: "BlinkyMove")
+
 			self.state = .playing
 			self.run(SKAction.repeatForever(self.slowSiren), withKey: "slowSiren")
 		}
