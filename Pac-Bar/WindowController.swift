@@ -50,32 +50,40 @@ class WindowController: NSWindowController {
         //Control Pac-Man movement
         case 123:
             //left
-            if horizontalMove {
-                up = false
-                down = false
+            if pacman.direction == .right {
+                pacman.updateDirection(to: .left)
+                directionCache = nil
+            } else if pacman.direction != .left {
+                counter = 15
+                directionCache = .left
             }
-            direction = false
-            horizontalWait = true
-            counter = 15
         case 124:
             //right
-            if horizontalMove {
-                up = false
-                down = false
+            if pacman.direction == .left {
+                pacman.updateDirection(to: .right)
+                directionCache = nil
+            } else if pacman.direction != .right {
+                counter = 15
+                directionCache = .right
             }
-            direction = true
-            horizontalWait = true
-            counter = 15
         case 125:
             //down
-            down = true
-            up = false
-            counter = 15
+            if pacman.direction == .up {
+                pacman.updateDirection(to: .down)
+                directionCache = nil
+            } else if pacman.direction != .down {
+                counter = 15
+                directionCache = .down
+            }
         case 126:
             //up
-            up = true
-            down = false
-            counter = 15
+            if pacman.direction == .down {
+                pacman.updateDirection(to: .up)
+                directionCache = nil
+            } else if pacman.direction != .up {
+                counter = 15
+                directionCache = .up
+            }
         default:
             break
         }

@@ -120,7 +120,7 @@
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sdf-bn-qnI">
                                 <rect key="frame" x="102" y="165" width="275" height="73"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Pac-Bar Logo" id="PXK-RW-Iju"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="logo" id="PXK-RW-Iju"/>
                             </imageView>
                         </subviews>
                     </view>
@@ -131,6 +131,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Pac-Bar Logo" width="182" height="46"/>
+        <image name="logo" width="182" height="46"/>
     </resources>
 </document>

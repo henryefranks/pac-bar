@@ -7,38 +7,44 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F00A26B024FBFE0A00CFB895 /* Blinky.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00A26AF24FBFE0A00CFB895 /* Blinky.swift */; };
+		F00A26B224FBFE1300CFB895 /* PacMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00A26B124FBFE1300CFB895 /* PacMan.swift */; };
 		F03206ED23AA607B001CF3E9 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03206EC23AA607B001CF3E9 /* GameScene.swift */; };
 		F03206EF23AA633F001CF3E9 /* Definitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03206EE23AA633F001CF3E9 /* Definitions.swift */; };
-		F037E27E1DF95AE100980901 /* death.wav in Resources */ = {isa = PBXBuildFile; fileRef = F037E2771DF95AE100980901 /* death.wav */; };
-		F037E27F1DF95AE100980901 /* intro.wav in Resources */ = {isa = PBXBuildFile; fileRef = F037E2781DF95AE100980901 /* intro.wav */; };
-		F037E2801DF95AE100980901 /* munch A.wav in Resources */ = {isa = PBXBuildFile; fileRef = F037E2791DF95AE100980901 /* munch A.wav */; };
-		F037E2811DF95AE100980901 /* munch B.wav in Resources */ = {isa = PBXBuildFile; fileRef = F037E27A1DF95AE100980901 /* munch B.wav */; };
-		F037E2821DF95AE100980901 /* siren fast.wav in Resources */ = {isa = PBXBuildFile; fileRef = F037E27B1DF95AE100980901 /* siren fast.wav */; };
-		F037E2831DF95AE100980901 /* siren medium.wav in Resources */ = {isa = PBXBuildFile; fileRef = F037E27C1DF95AE100980901 /* siren medium.wav */; };
-		F037E2841DF95AE100980901 /* siren slow.wav in Resources */ = {isa = PBXBuildFile; fileRef = F037E27D1DF95AE100980901 /* siren slow.wav */; };
 		F050D7671DE4EF8600FA92BC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F050D7661DE4EF8600FA92BC /* Main.storyboard */; };
+		F05465DB24FD7FFD00F4675C /* Sprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05465DA24FD7FFD00F4675C /* Sprite.swift */; };
 		F05C8E241DE35B7E00B5CCBC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05C8E231DE35B7E00B5CCBC /* AppDelegate.swift */; };
 		F05C8E261DE35B7E00B5CCBC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05C8E251DE35B7E00B5CCBC /* ViewController.swift */; };
 		F05C8E281DE35B7E00B5CCBC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F05C8E271DE35B7E00B5CCBC /* Assets.xcassets */; };
+		F0AF962F2527C6E70037E9B7 /* munch B.wav in Resources */ = {isa = PBXBuildFile; fileRef = F0AF96282527C6E70037E9B7 /* munch B.wav */; };
+		F0AF96302527C6E70037E9B7 /* siren slow.wav in Resources */ = {isa = PBXBuildFile; fileRef = F0AF96292527C6E70037E9B7 /* siren slow.wav */; };
+		F0AF96312527C6E70037E9B7 /* siren medium.wav in Resources */ = {isa = PBXBuildFile; fileRef = F0AF962A2527C6E70037E9B7 /* siren medium.wav */; };
+		F0AF96322527C6E70037E9B7 /* munch A.wav in Resources */ = {isa = PBXBuildFile; fileRef = F0AF962B2527C6E70037E9B7 /* munch A.wav */; };
+		F0AF96332527C6E70037E9B7 /* intro.wav in Resources */ = {isa = PBXBuildFile; fileRef = F0AF962C2527C6E70037E9B7 /* intro.wav */; };
+		F0AF96342527C6E70037E9B7 /* siren fast.wav in Resources */ = {isa = PBXBuildFile; fileRef = F0AF962D2527C6E70037E9B7 /* siren fast.wav */; };
+		F0AF96352527C6E70037E9B7 /* death.wav in Resources */ = {isa = PBXBuildFile; fileRef = F0AF962E2527C6E70037E9B7 /* death.wav */; };
 		F0FC0E991DE36B550029C782 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FC0E981DE36B550029C782 /* WindowController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F00A26AF24FBFE0A00CFB895 /* Blinky.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blinky.swift; sourceTree = "<group>"; };
+		F00A26B124FBFE1300CFB895 /* PacMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacMan.swift; sourceTree = "<group>"; };
 		F03206EC23AA607B001CF3E9 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		F03206EE23AA633F001CF3E9 /* Definitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Definitions.swift; sourceTree = "<group>"; };
-		F037E2771DF95AE100980901 /* death.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = death.wav; sourceTree = "<group>"; };
-		F037E2781DF95AE100980901 /* intro.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = intro.wav; sourceTree = "<group>"; };
-		F037E2791DF95AE100980901 /* munch A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "munch A.wav"; sourceTree = "<group>"; };
-		F037E27A1DF95AE100980901 /* munch B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "munch B.wav"; sourceTree = "<group>"; };
-		F037E27B1DF95AE100980901 /* siren fast.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "siren fast.wav"; sourceTree = "<group>"; };
-		F037E27C1DF95AE100980901 /* siren medium.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "siren medium.wav"; sourceTree = "<group>"; };
-		F037E27D1DF95AE100980901 /* siren slow.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "siren slow.wav"; sourceTree = "<group>"; };
 		F050D7661DE4EF8600FA92BC /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		F05465DA24FD7FFD00F4675C /* Sprite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sprite.swift; sourceTree = "<group>"; };
 		F05C8E201DE35B7E00B5CCBC /* Pac-Bar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pac-Bar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F05C8E231DE35B7E00B5CCBC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F05C8E251DE35B7E00B5CCBC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		F05C8E271DE35B7E00B5CCBC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F05C8E2C1DE35B7E00B5CCBC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F0AF96282527C6E70037E9B7 /* munch B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "munch B.wav"; sourceTree = "<group>"; };
+		F0AF96292527C6E70037E9B7 /* siren slow.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "siren slow.wav"; sourceTree = "<group>"; };
+		F0AF962A2527C6E70037E9B7 /* siren medium.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "siren medium.wav"; sourceTree = "<group>"; };
+		F0AF962B2527C6E70037E9B7 /* munch A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "munch A.wav"; sourceTree = "<group>"; };
+		F0AF962C2527C6E70037E9B7 /* intro.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = intro.wav; sourceTree = "<group>"; };
+		F0AF962D2527C6E70037E9B7 /* siren fast.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "siren fast.wav"; sourceTree = "<group>"; };
+		F0AF962E2527C6E70037E9B7 /* death.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = death.wav; sourceTree = "<group>"; };
 		F0FC0E981DE36B550029C782 /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -53,18 +59,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F037E2761DF95AA500980901 /* Sounds */ = {
+		F05465DC24FD800E00F4675C /* Sprite */ = {
 			isa = PBXGroup;
 			children = (
-				F037E2771DF95AE100980901 /* death.wav */,
-				F037E2781DF95AE100980901 /* intro.wav */,
-				F037E2791DF95AE100980901 /* munch A.wav */,
-				F037E27A1DF95AE100980901 /* munch B.wav */,
-				F037E27B1DF95AE100980901 /* siren fast.wav */,
-				F037E27C1DF95AE100980901 /* siren medium.wav */,
-				F037E27D1DF95AE100980901 /* siren slow.wav */,
+				F00A26AF24FBFE0A00CFB895 /* Blinky.swift */,
+				F00A26B124FBFE1300CFB895 /* PacMan.swift */,
+				F05465DA24FD7FFD00F4675C /* Sprite.swift */,
 			);
-			name = Sounds;
+			path = Sprite;
 			sourceTree = "<group>";
 		};
 		F05C8E171DE35B7D00B5CCBC = {
@@ -91,12 +93,27 @@
 				F05C8E251DE35B7E00B5CCBC /* ViewController.swift */,
 				F0FC0E981DE36B550029C782 /* WindowController.swift */,
 				F03206EC23AA607B001CF3E9 /* GameScene.swift */,
-				F05C8E271DE35B7E00B5CCBC /* Assets.xcassets */,
-				F037E2761DF95AA500980901 /* Sounds */,
-				F050D7661DE4EF8600FA92BC /* Main.storyboard */,
+				F05465DC24FD800E00F4675C /* Sprite */,
 				F05C8E2C1DE35B7E00B5CCBC /* Info.plist */,
+				F050D7661DE4EF8600FA92BC /* Main.storyboard */,
+				F05C8E271DE35B7E00B5CCBC /* Assets.xcassets */,
+				F0AF96272527C6E70037E9B7 /* Audio */,
 			);
 			path = "Pac-Bar";
+			sourceTree = "<group>";
+		};
+		F0AF96272527C6E70037E9B7 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				F0AF96282527C6E70037E9B7 /* munch B.wav */,
+				F0AF96292527C6E70037E9B7 /* siren slow.wav */,
+				F0AF962A2527C6E70037E9B7 /* siren medium.wav */,
+				F0AF962B2527C6E70037E9B7 /* munch A.wav */,
+				F0AF962C2527C6E70037E9B7 /* intro.wav */,
+				F0AF962D2527C6E70037E9B7 /* siren fast.wav */,
+				F0AF962E2527C6E70037E9B7 /* death.wav */,
+			);
+			path = Audio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,15 +177,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F037E2801DF95AE100980901 /* munch A.wav in Resources */,
-				F037E2831DF95AE100980901 /* siren medium.wav in Resources */,
-				F037E2821DF95AE100980901 /* siren fast.wav in Resources */,
+				F0AF96302527C6E70037E9B7 /* siren slow.wav in Resources */,
+				F0AF96342527C6E70037E9B7 /* siren fast.wav in Resources */,
 				F05C8E281DE35B7E00B5CCBC /* Assets.xcassets in Resources */,
-				F037E2811DF95AE100980901 /* munch B.wav in Resources */,
-				F037E27F1DF95AE100980901 /* intro.wav in Resources */,
-				F037E27E1DF95AE100980901 /* death.wav in Resources */,
 				F050D7671DE4EF8600FA92BC /* Main.storyboard in Resources */,
-				F037E2841DF95AE100980901 /* siren slow.wav in Resources */,
+				F0AF96312527C6E70037E9B7 /* siren medium.wav in Resources */,
+				F0AF962F2527C6E70037E9B7 /* munch B.wav in Resources */,
+				F0AF96332527C6E70037E9B7 /* intro.wav in Resources */,
+				F0AF96352527C6E70037E9B7 /* death.wav in Resources */,
+				F0AF96322527C6E70037E9B7 /* munch A.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +200,9 @@
 				F0FC0E991DE36B550029C782 /* WindowController.swift in Sources */,
 				F03206ED23AA607B001CF3E9 /* GameScene.swift in Sources */,
 				F03206EF23AA633F001CF3E9 /* Definitions.swift in Sources */,
+				F00A26B224FBFE1300CFB895 /* PacMan.swift in Sources */,
+				F00A26B024FBFE0A00CFB895 /* Blinky.swift in Sources */,
+				F05465DB24FD7FFD00F4675C /* Sprite.swift in Sources */,
 				F05C8E241DE35B7E00B5CCBC /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -306,7 +326,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4B001;
+				CURRENT_PROJECT_VERSION = 4R004;
 				DEVELOPMENT_TEAM = 6K6QB4494B;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "Pac-Bar/Info.plist";
@@ -325,7 +345,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4B001;
+				CURRENT_PROJECT_VERSION = 4R004;
 				DEVELOPMENT_TEAM = 6K6QB4494B;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "Pac-Bar/Info.plist";

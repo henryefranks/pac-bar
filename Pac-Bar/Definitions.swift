@@ -8,15 +8,14 @@
 
 import Cocoa
 
+let POS_EPS: CGFloat = 0.5 // epsilon for position checking accuracy
+let SQUARE_SIZE: CGFloat = 14
+
 public var textField: NSTextField!
 public var highField: NSTextField!
 
-var direction: Bool = true // true=right, false=left
-var up: Bool = false       // up/down triggers to wait until
-var down: Bool = false     // we reach a corner
-var horizontalWait: Bool = false
-var horizontalMove = true
 var counter: Int = 15 // To acount for awkwardness in controls
+var directionCache: Direction? = nil
 
 struct gamePhysics {
     static let PacMan: UInt32 = 1
@@ -25,7 +24,7 @@ struct gamePhysics {
 }
 
 enum GameState {
-    case intro, playing
+    case introAnimation, playing, gameOverAnimation, waitingForRestart
 }
 
 protocol DetailsDelegate: class {
@@ -42,3 +41,6 @@ var highScore: Int {
         return UserDefaults.standard.object(forKey: "highScore") as? Int ?? 0
     }
 }
+
+let pacman = PacMan()
+let blinky = Blinky()

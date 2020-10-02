@@ -6,47 +6,21 @@
 //  Copyright © 2019 Henry Franks. All rights reserved.
 //
 
-import Cocoa
+import Foundation
 import SpriteKit
 import GameplayKit
 
-// FIXME: Memory Leaks
-// TODO: Convert to classes
+var level: Int = 0
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //Variables
-    var state: GameState = .intro
+    var state: GameState = .introAnimation
     var score: Int = 0
     var numDots = 85
-    var PacMan: SKSpriteNode!
-    var PacFrames: [SKTexture]!
-    var Blinky: SKSpriteNode!
-    var BlinkyFrames: [SKTexture]!
-    var BlinkyUpFrames: [SKTexture]!
-    var BlinkyDownFrames: [SKTexture]!
-    var bHorizontalMove: Bool = true
-    var bVerticalMove: Bool = true
-    var blinkySpeed: CGFloat = 1
     var barIsWhite: Bool = false
-    var level: Int = 0
-    var tHold1: Bool = false // These keep Blinky's speed from
-    var tHold2: Bool = false // being increased more than once
-    var dotNumber: Bool = true // true = 1, false = 2
 
     // Sounds
-    let munchA = SKAction.playSoundFileNamed(
-        "munch A.wav",
-        waitForCompletion: false
-    )
-    let munchB = SKAction.playSoundFileNamed(
-        "munch B.wav",
-        waitForCompletion: false
-    )
-    let gameOverSound = SKAction.playSoundFileNamed(
-        "death.wav",
-        waitForCompletion: false
-    )
     let introSound = SKAction.playSoundFileNamed(
         "intro.wav",
         waitForCompletion: false
@@ -68,7 +42,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func createDots() {
         var dotArray = [SKSpriteNode]()
         for _ in 1...85 {
-            dotArray.append(SKSpriteNode(imageNamed: "Dot"))
+            dotArray.append(SKSpriteNode(imageNamed: "dot"))
         }
         var offsetX = 7
         for (index, item) in dotArray.enumerated() {
@@ -85,16 +59,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             offsetX += 8
         }
         level += 1
-        blinkySpeed = 1
-        if level > 10 {
-            bSpeedInc()
-        }
-        if level > 15 {
-            bSpeedInc()
-        }
-        if level > 20 {
-            bSpeedInc()
-        }
     }
 
     func createBorders() {
@@ -171,12 +135,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         dot.removeFromParent()
         numDots -= 1
         updateScore(value: String(describing: score))
-        if dotNumber {
-            PacMan.run(munchA)
-        } else {
-            PacMan.run(munchB)
-        }
-        dotNumber = !dotNumber
+        pacman.playMunchSound()
     }
 
     func removeDots() {
@@ -191,22 +150,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             (node, stop) -> Void in
             node.removeFromParent()
         })
-    }
-
-    //Miscellaneous
-    func GameOver(blinky: SKSpriteNode) {
-        if score > highScore {
-            highScore = score
-        }
-
-        self.view?.scene?.isPaused = true
-        for action in ["slowSiren", "mediumSiren", "fastSiren"] {
-            self.removeAction(forKey: action)
-        }
-
-        blinky.removeFromParent()
-        self.removeDots()
-        DeathFrames()
     }
 
     func flashBars() {
@@ -250,81 +193,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    func findDiv(number: Double, divLength: Double) -> Double {
-        // find where 'number' lies in 'total' divided into divisions of
-        // 'divlength' width (separation into squares)
-        return (number / divLength).rounded(.towardZero)
-    }
-
-    func findShortestPath(array: [Double]) -> Int {
-        var i: Double = array[0]
-        var output: Int = 0
-        for (index, item) in array.enumerated() {
-            if item < i && item > 0 {
-                i = item
-                output = index
-            }
-        }
-        return output
-    }
-
     func updateScore(value: String) {
         textField?.stringValue = value
         highField?.stringValue = "High Score: \(highScore)"
-    }
-
-    func bSpeedInc() {
-        blinkySpeed = blinkySpeed * 1.05
-    }
-
-    func DeathFrames() {
-        var PacManD: SKSpriteNode!
-        let DeathAtlas = SKTextureAtlas(named: "PacmanD")
-        var deathFrames = [SKTexture]()
-
-        for index in 1...11 {
-            let textureName = "PacManD\(index)"
-            deathFrames.append(DeathAtlas.textureNamed(textureName))
-        }
-
-        PacManD = SKSpriteNode(texture: deathFrames[0])
-        PacManD.position.x = self.PacMan.position.x
-        PacManD.position.y = self.PacMan.position.y - 2
-
-        Blinky.removeFromParent()
-        PacMan.removeAction(forKey: "PacManEat")
-        PacMan.texture = SKTexture(imageNamed: "Pacman3")
-
-        updateScore(value: String(describing: score) + "\n GAME OVER")
-        self.PacMan.removeFromParent()
-        self.addChild(PacManD)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
-            self.view?.scene?.isPaused = false
-            PacManD.run(self.gameOverSound)
-
-            for i in 1...11 {
-                // account for differences in sprite dimensions
-                if i == 1 {
-                    PacManD.position.y -= 1
-                }
-                if i == 11 {
-                    PacManD.position.y += 1
-                }
-
-                PacManD.run(
-                    SKAction.animate(
-                        with: deathFrames,
-                        timePerFrame: 0.1,
-                        resize: false,
-                        restore: true
-                    ),
-                    withKey: "GameOver"
-                )
-            }
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.3) {
-                self.view?.scene?.isPaused = true
-            }
-        }
     }
 
     func didBegin(_ contact: SKPhysicsContact) {
@@ -336,159 +207,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         {
             removeDot(dot: secondBody.node as! SKSpriteNode)
         }
-        else if firstBody.categoryBitMask == gamePhysics.Blinky &&
-                secondBody.categoryBitMask == gamePhysics.PacMan
+        else if firstBody.categoryBitMask == gamePhysics.PacMan &&
+                secondBody.categoryBitMask == gamePhysics.Blinky
         {
-            GameOver(blinky: firstBody.node as! SKSpriteNode)
-        }
-    }
+            // game over
+            self.state = .gameOverAnimation
 
-    //Movement
-    func checkVertical() {
-        // account for decimals (TODO: Decide on a standard epsilon)
-        if PacMan.position.x < 214.5 && PacMan.position.x > 213.5 {
-            if up {
-                PacMan.position.x = 214
-                PacMan.xScale = 1
-                PacMan.zRotation = CGFloat(0.5 * Double.pi)
-                horizontalMove = false
-                PacMan.position.y += 1
-            } else if down {
-                PacMan.xScale = 1
-                PacMan.position.x = 214
-                PacMan.zRotation = CGFloat(1.5 * Double.pi)
-                horizontalMove = false
-                PacMan.position.y -= 1
-            }
-        } else if PacMan.position.x < 642.5 && PacMan.position.x > 641.5 {
-            if up {
-                PacMan.xScale = 1
-                PacMan.position.x = 642
-                PacMan.zRotation = CGFloat(0.5 * Double.pi)
-                horizontalMove = false
-                PacMan.position.y += 1
-            } else if down {
-                PacMan.xScale = 1
-                PacMan.position.x = 642
-                PacMan.zRotation = CGFloat(1.5 * Double.pi)
-                horizontalMove = false
-                PacMan.position.y -= 1
-            }
-        }
-    }
-
-    func checkHorizontal() {
-        if !horizontalMove {
-            if PacMan.position.y < 16 && PacMan.position.y > 14 {
-                if horizontalWait {
-                    horizontalMove = true
-                    PacMan.position.y = 15
-                    PacMan.zRotation = 0
-                    horizontalWait = false
-                    up = false
-                    down = false
-                }
-            }
-        }
-    }
-
-    func findNearestPath() -> [Double]? {
-        let bXPos = Double(Blinky.position.x)
-        let bYPos = Double(Blinky.position.y)
-        let pXPos = Double(PacMan.position.x)
-        let pYPos = Double(PacMan.position.y)
-        var out = [Double]()
-
-        if bYPos > 14.5 && bYPos < 15.5 &&
-           ((bXPos < 214.5 && bXPos > 213.5) ||
-            (bXPos < 642.5 && bXPos > 641.5))
-        {
-            let pXDiv = findDiv(number: pXPos, divLength: 14)
-            let pYDiv = findDiv(number: pYPos, divLength: 14)
-            let bXDiv = findDiv(number: bXPos, divLength: 14)
-            let bYDiv = findDiv(number: bYPos, divLength: 14)
-            let fBXDiv = (findDiv(number: bXPos, divLength: 14) + 1)
-            let bBXDiv = (findDiv(number: bXPos, divLength: 14) - 1)
-            let uBYDiv = (findDiv(number: bYPos, divLength: 14) + 1)
-            let dBYDiv = (findDiv(number: bYPos, divLength: 14) - 1)
-            let currentXDiff: Double = abs(pXDiv - bXDiv) *
-                                       abs(pXDiv - bXDiv)
-            let currentYDiff: Double = abs(pYDiv - bYDiv) *
-                                       abs(pYDiv - bYDiv)
-            let forwardsDiff: Double = abs(pXDiv - fBXDiv) *
-                                       abs(pXDiv - fBXDiv)
-            let backwardsDiff: Double = abs(pXDiv - bBXDiv) *
-                                        abs(pXDiv - bBXDiv)
-            let upDiff: Double = abs(pYDiv - uBYDiv) *
-                                 abs(pYDiv - uBYDiv)
-            let downDiff: Double = abs(pYDiv - dBYDiv) *
-                                   abs(pYDiv - dBYDiv)
-            if bHorizontalMove {
-                if Blinky.xScale > 0 {
-                    out = [
-                        currentXDiff + upDiff,
-                        -1.0,
-                        currentXDiff + downDiff,
-                        forwardsDiff + currentYDiff
-                    ]
-                } else {
-                    out = [
-                        currentXDiff + upDiff,
-                        backwardsDiff + currentYDiff,
-                        currentXDiff + downDiff,
-                        -1.0
-                    ]
-                }
-            } else {
-                if bVerticalMove {
-                    out = [
-                        currentXDiff + upDiff,
-                        backwardsDiff + currentYDiff,
-                        -1.0,
-                        forwardsDiff + currentYDiff
-                    ]
-                } else {
-                    out = [
-                        -1.0,
-                        backwardsDiff + currentYDiff,
-                        currentXDiff + downDiff,
-                        forwardsDiff + currentYDiff
-                    ]
-                }
+            if score > highScore {
+                highScore = score
             }
 
-            return out
-        }
-        return nil
-    }
-
-    func bSpeed(xPos: CGFloat, yPos: CGFloat) -> CGFloat {
-        if xPos < 50 || xPos > 650 || yPos > 16 || yPos < 14 {
-            return (blinkySpeed - 0.1)
-        }
-        return blinkySpeed
-    }
-
-    func checkOverflow( sprite: SKSpriteNode) {
-        if sprite.position.x < 0 {
-            sprite.position.x = 700
-        } else if sprite.position.x > 700 {
-            sprite.position.x = 0
-        }
-        if sprite.position.y < 0 {
-            if sprite.position.x > 213.5 && sprite.position.x < 214.5 {
-                sprite.position.x = 642
-            } else {
-                sprite.position.x = 214
+            self.view?.scene?.isPaused = true
+            for action in ["slowSiren", "mediumSiren", "fastSiren"] {
+                self.removeAction(forKey: action)
             }
-            sprite.position.y = 30
-        } else if sprite.position.y > 30 {
-            if sprite.position.x > 213.5 && sprite.position.x < 214.5 {
-                sprite.position.x = 642
-            } else {
-                sprite.position.x = 214
+
+            blinky.removeFromParent()
+            self.removeDots()
+
+            pacman.position.y -= 2
+            pacman.removeAction(forKey: "PacManEat")
+            pacman.texture = SKTexture(imageNamed: "Pacman3")
+
+            blinky.removeFromParent()
+
+            updateScore(value: String(describing: score) + "\n GAME OVER")
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
+                self.view?.scene?.isPaused = false
+                pacman.gameover()
             }
-            sprite.position.y = 0
+
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.1) {
+                pacman.removeFromParent()
+                self.state = .waitingForRestart
+                self.view?.scene?.isPaused = true
+            }
         }
     }
 
@@ -505,87 +258,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createBorders()
         self.scaleMode = .resizeFill
         self.backgroundColor = .black
-        let PacManAtlas = SKTextureAtlas(named: "Pacman")
-        var eatFrames = [SKTexture]()
-        for index in 1...3 {
-            let textureName = "PacMan\(index)"
-            eatFrames.append(PacManAtlas.textureNamed(textureName))
-        }
-        let	BlinkyAtlas = SKTextureAtlas(named: "Blinky")
-        var ghostFrames = [SKTexture]()
-        for index in 1...2 {
-            let textureName = "Blinky\(index)"
-            ghostFrames.append(BlinkyAtlas.textureNamed(textureName))
-        }
-        let	BlinkyUpAtlas = SKTextureAtlas(named: "BlinkyUp")
-        var ghostUpFrames = [SKTexture]()
-        for index in 1...2 {
-            let textureName = "BlinkyUp\(index)"
-            ghostUpFrames.append(BlinkyUpAtlas.textureNamed(textureName))
-        }
-        let	BlinkyDownAtlas = SKTextureAtlas(named: "BlinkyDown")
-        var ghostDownFrames = [SKTexture]()
-        for index in 1...2 {
-            let textureName = "BlinkyDown\(index)"
-            ghostDownFrames.append(BlinkyDownAtlas.textureNamed(textureName))
-        }
-        BlinkyFrames = ghostFrames
-        BlinkyUpFrames = ghostUpFrames
-        BlinkyDownFrames = ghostDownFrames
 
-        createSprite(
-            texture: BlinkyFrames,
-            height: 14,
-            width: 14,
-            xPos: 50,
-            yPos: 15,
-            node: &Blinky,
-            catBitMask: gamePhysics.Blinky,
-            conTestBitMask: [
-                gamePhysics.PacMan,
-                gamePhysics.Dot
-            ]
-        )
-        PacFrames = eatFrames
+        self.addChild(pacman)
+        self.addChild(blinky)
 
-        createSprite(
-            texture: PacFrames,
-            height: 13,
-            width: 13,
-            xPos: 300,
-            yPos: 15,
-            node: &PacMan,
-            catBitMask: gamePhysics.PacMan,
-            conTestBitMask: [
-                gamePhysics.Dot,
-                gamePhysics.Blinky
-            ]
-        )
-
-        PacMan.texture = PacFrames[2]
-        Blinky.physicsBody?.collisionBitMask = 0
+        pacman.texture = PacMan.eatFrames[2]
 
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 4.5) {
             self.createDots()
-            self.Blinky.zPosition = 5
 
-            self.PacMan.run(
+            pacman.run(
                 SKAction.repeatForever(SKAction.animate(
-                    with: self.PacFrames,
+                    with: PacMan.eatFrames,
                     timePerFrame: 0.05,
                     resize: false,
                     restore: true
                 )),
                 withKey: "PacManEat"
             )
-            self.Blinky.run(
+            blinky.run(
                 SKAction.repeatForever(SKAction.animate(
-                    with: self.BlinkyFrames,
+                    with: Blinky.sideFrames,
                     timePerFrame: 0.05,
                     resize: false,
                     restore: true
                 )),
-                withKey: "BlinkyMove"
+                withKey: "horizontalMove"
             )
 
             self.state = .playing
@@ -599,175 +297,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //Update everything (calls other functions)
     override func update(_ currentTime: TimeInterval) {
         if self.state == .playing {
-            let bXPos = Blinky.position.x
-            let bYPos = Blinky.position.y
+            pacman.update()
+            blinky.update()
 
-            checkOverflow(sprite: PacMan)
-            checkOverflow(sprite: Blinky)
-
-            if numDots == 10 {
-                if !tHold2 {
-                    bSpeedInc()
-
-                    self.removeAction(forKey: "mediumSiren")
-                    self.run(
-                        SKAction.repeatForever(fastSiren),
-                        withKey: "fastSiren"
-                    )
-                }
-
-                tHold2 = true
-            } else if numDots == 30 {
-                if !tHold1 {
-                    bSpeedInc()
-
-                    self.removeAction(forKey: "slowSiren")
-                    self.run(
-                        SKAction.repeatForever(mediumSiren),
-                        withKey: "mediumSiren"
-                    )
-                }
-
-                tHold1 = true
+            if numDots <= 10 && blinky.movementSpeed == .medium {
+                blinky.movementSpeed = .fast
+                self.removeAction(forKey: "mediumSiren")
+                self.run(
+                    SKAction.repeatForever(self.fastSiren),
+                    withKey: "fastSiren"
+                )
+            } else if numDots <= 30 && blinky.movementSpeed == .slow {
+                blinky.movementSpeed = .medium
+                self.removeAction(forKey: "slowSiren")
+                self.run(
+                    SKAction.repeatForever(self.mediumSiren),
+                    withKey: "mediumSiren"
+                )
             }
 
-            if let array = findNearestPath() {
-                if findShortestPath(array: array) == 1 ||
-                   findShortestPath(array: array) == 3
-                {
-                    bHorizontalMove = true
-                    if Blinky.action(forKey: "BlinkyMoveUp") != nil {
-                        Blinky.removeAction(forKey: "BlinkyMoveUp")
-                    }
-                    if Blinky.action(forKey: "BlinkyMoveDown") != nil {
-                        Blinky.removeAction(forKey: "BlinkyMoveDown")
-                    }
-                    if Blinky.action(forKey: "BlinkyMoveDown") == nil {
-                        Blinky.run(
-                            SKAction.repeatForever(SKAction.animate(
-                                with: BlinkyFrames,
-                                timePerFrame: 0.05,
-                                resize: false,
-                                restore: true
-                            )),
-                            withKey: "BlinkyMove"
-                        )
-                    }
-                    Blinky.position.y = 15
-                }
-
-                switch findShortestPath(array: array) {
-                case 0:
-                    if Blinky.action(forKey: "BlinkyMove") != nil {
-                        Blinky.removeAction(forKey: "BlinkyMove")
-                    }
-                    if Blinky.action(forKey: "BlinkyMoveDown") != nil {
-                        Blinky.removeAction(forKey: "BlinkyMoveDown")
-                    }
-                    if Blinky.action(forKey: "BlinkyMoveUp") == nil {
-                        Blinky.run(
-                            SKAction.repeatForever(SKAction.animate(
-                                with: BlinkyUpFrames,
-                                timePerFrame: 0.05,
-                                resize: false,
-                                restore: true
-                            )),
-                            withKey: "BlinkyMoveUp"
-                        )
-                    }
-                    if Blinky.position.x < 214.5 && Blinky.position.x > 213.5 {
-                        Blinky.position.x = 214
-                    } else {
-                        Blinky.position.x = 642
-                    }
-                    bHorizontalMove = false
-                    bVerticalMove = true
-                    Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
-                case 1:
-                    bHorizontalMove = true
-                    Blinky.position.y = 15
-                    Blinky.position.x -= bSpeed(xPos: bXPos, yPos: bYPos)
-                    Blinky.xScale = -1
-                case 2:
-                    if Blinky.action(forKey: "BlinkyMove") != nil {
-                        Blinky.removeAction(forKey: "BlinkyMove")
-                    }
-                    if Blinky.action(forKey: "BlinkyMoveUp") != nil {
-                        Blinky.removeAction(forKey: "BlinkyMoveUp")
-                    }
-                    if Blinky.action(forKey: "BlinkyMoveDown") == nil {
-                        Blinky.run(
-                            SKAction.repeatForever(SKAction.animate(
-                                with: BlinkyDownFrames,
-                                timePerFrame: 0.05,
-                                resize: false,
-                                restore: true
-                            )),
-                            withKey: "BlinkyMoveDown"
-                        )
-                    }
-                    if Blinky.position.x < 214.5 && Blinky.position.x > 213.5 {
-                        Blinky.position.x = 214
-                    } else {
-                        Blinky.position.x = 642
-                    }
-                    bHorizontalMove = false
-                    bVerticalMove = false
-                    Blinky.position.y -= bSpeed(xPos: bXPos, yPos: bYPos)
-                case 3:
-                    bHorizontalMove = true
-                    Blinky.position.y = 15
-                    Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
-                    Blinky.xScale = 1
-                default:
-                    break
-                }
-            } else {
-                if bHorizontalMove {
-                    if Blinky.xScale > 0 {
-                        Blinky.position.x += bSpeed(xPos: bXPos, yPos: bYPos)
-                        Blinky.xScale = 1
-                    } else {
-                        Blinky.position.x -= bSpeed(xPos: bXPos, yPos: bYPos)
-                        Blinky.xScale = -1
-                    }
-                } else {
-                    if bVerticalMove {
-                        Blinky.position.y += bSpeed(xPos: bXPos, yPos: bYPos)
-                    } else {
-                        Blinky.position.y -= bSpeed(xPos: bXPos, yPos: bYPos)
-                    }
-                }
-            }
-            if horizontalMove {
-                horizontalWait = false
-
-                if direction {
-                    if PacMan.xScale < 0 {
-                        PacMan.xScale = PacMan.xScale * -1;
-                    }
-                    PacMan.position.x += 1
-                } else {
-                    if PacMan.xScale > 0 {
-                        PacMan.xScale = PacMan.xScale * -1;
-                    }
-                    PacMan.position.x -= 1
-                }
-            }
-            checkVertical()
-            checkHorizontal()
             if counter > 0 {
                 counter -= 1
-            } else {
-                horizontalWait = false
-                if !(PacMan.position.x < 214.5 && PacMan.position.x > 213.5) &&
-                   !(PacMan.position.x < 642.5 && PacMan.position.x > 641.5)
-                {
-                    up = false
-                    down = false
+
+                if directionCache != nil  && pacman.yIsClose(to: 15) &&
+                    (pacman.xIsClose(to: 214) ||
+                        pacman.xIsClose(to: 642)) {
+                    pacman.updateDirection(to: directionCache!)
+                    counter = 0
+                }
+
+                if counter == 0 {
+                    directionCache = nil
                 }
             }
-            checkOverflow(sprite: Blinky)
+
             if numDots < 1 {
                 self.view?.scene?.isPaused = true
 
@@ -775,12 +338,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.removeAction(forKey: action)
                 }
 
-                PacMan.texture = SKTexture(imageNamed: "Pacman3")
+                pacman.texture = SKTexture(imageNamed: "Pacman3")
 
                 DispatchQueue.main.asyncAfter(
                     deadline: DispatchTime.now() + 0.3)
                 {
-                    self.Blinky.removeFromParent()
+                    blinky.removeFromParent()
 
                     for i in 1...8 {
                         self.flashAfterDelay(delay: Double(i) * 0.2)
@@ -790,31 +353,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 DispatchQueue.main.asyncAfter(
                     deadline: DispatchTime.now() + 2.3)
                 {
-                    self.PacMan.removeFromParent()
+                    pacman.removeFromParent()
                     self.hideBars()
                 }
 
                 DispatchQueue.main.asyncAfter(
                     deadline: DispatchTime.now() + 2.4)
                 {
-                    self.addChild(self.PacMan)
+                    self.addChild(pacman)
+                    pacman.position = CGPoint(x: 300, y: 15)
+
                     self.createBorders()
-                    self.addChild(self.Blinky)
-                    self.Blinky.position.x = 50
-                    self.Blinky.position.y = 15
-                    self.PacMan.position.x = 300
-                    self.PacMan.position.y = 15
+
+                    self.addChild(blinky)
+                    blinky.position = CGPoint(x: 50, y: 15)
+                    blinky.movementSpeed = .slow
                 }
 
                 DispatchQueue.main.asyncAfter(
                     deadline: DispatchTime.now() + 2.6)
                 {
-                    direction = true
-                    self.Blinky.xScale = 1
                     self.numDots = 85
                     self.createDots()
-                    self.tHold1 = false
-                    self.tHold2 = false
                     self.view?.scene?.isPaused = false
 
                     self.run(
